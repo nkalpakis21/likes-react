@@ -3,15 +3,15 @@ import styles from '../styles/Home.module.css'
 import { useEffect, useState } from 'react'
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 
-const streamBaseURL = "http://localhost:3002";
-const serverBaseURL = "http://localhost:8080";
+const loadBalancer = "http://127.0.0.1:8080";
+const streamUrl = "http://127.0.0.1:3004";
 
 export default function Home() {
   const [likes, setLikes] = useState(null);
 
   const handleLike = async() => {
     try{
-      await fetch(`${serverBaseURL}/likes/update`, {method: 'POST'})
+      await fetch(`${loadBalancer}/likes/update`, {method: 'POST'})
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
@@ -23,7 +23,7 @@ export default function Home() {
   }
   useEffect(() => {
     const fetchData = async () => {
-      await fetchEventSource(`${streamBaseURL}/likes`, {
+      await fetchEventSource(`${streamUrl}/likes`, {
         method: "GET",
         headers: {
           Accept: "text/event-stream",
